@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import Config from "./config"
 import { singletons } from "./singletons"
-import { lister, minter } from "./routers";
+import { lister, minter, transfer } from "./routers";
 
 (async () => {
 
@@ -17,6 +17,8 @@ import { lister, minter } from "./routers";
   app.use("/minter", await minter(deps))
 
   app.use("/lister", await lister(deps))
+
+  app.use("/transfer", await transfer(deps))
 
   app.get("/service/heartbeat", async (req, res) => {
     res.json({
