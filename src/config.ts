@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { AppConfig } from "xp.network"
+import { AppConfig } from "xp.network";
 
 config();
 
@@ -12,5 +12,5 @@ export default {
     moralisServer: process.env.MORALIS_SERVER!,
     tronScanUri: process.env.TRONSCAN_URI!,
     moralisSecret: process.env.MORALIS_SECRET!,
-  } as AppConfig
-}
+  } as AppConfig,
+};
