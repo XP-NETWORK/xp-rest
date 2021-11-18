@@ -24,9 +24,11 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@elrondnetwork/erdjs": "^8.0.1-alpha.12",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "ethers": "^5.5.1",
     "express": "^4.17.1",
-    "xp.network": "^0.1.1"
+    "xp.network": "git+https://github.com/xp-network/xpjs#master-dist"
   }
 }
