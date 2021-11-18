@@ -2,8 +2,7 @@ import express from "express";
 import cors from "cors";
 import Config from "./config"
 import { singletons } from "./singletons"
-import { Web3Helper, Web3Params } from "xp.network";
-import mintRouter from "./routers/minter";
+import { lister, minter } from "./routers";
 
 (async () => {
 
@@ -15,7 +14,9 @@ import mintRouter from "./routers/minter";
 
   const deps = await singletons()
 
-  app.use("/minter", await mintRouter(deps))
+  app.use("/minter", await minter(deps))
+
+  app.use("/lister", await lister(deps))
 
   app.get("/service/heartbeat", async (req, res) => {
     res.json({
