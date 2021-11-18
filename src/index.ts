@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import Config from "./config"
 
 const app = express();
 
@@ -15,6 +16,6 @@ app.get("/service/heartbeat", async (req, res) => {
   });
 });
 
-app.listen("8000", () => {
-  console.log(`Express Server Listening @${8000}`);
+app.listen(Config.port, () => {
+  console.log(`Express Server Listening @${Config.port}`);
 });
