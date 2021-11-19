@@ -19,7 +19,7 @@ import { approve, lister, minter, transfer } from "./routers";
 
   app.use("/transfer", await transfer(deps));
 
-  app.use("/approve", await approve(deps))
+  app.use("/approve", await approve(deps));
 
   app.get("/service/heartbeat", async (_req, res) => {
     res.json({

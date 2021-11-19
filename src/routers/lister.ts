@@ -7,18 +7,18 @@ import { checkChain, validate } from "./validation";
 const listerRouter = async (deps: Singleton) => {
   const router = Router();
 
-  const listService = createListService(deps)
+  const listService = createListService(deps);
 
   router.post("/listNfts", ...checkChain(), validate, async (req, res) => {
     const { chain, nonce, address } = req.body;
 
     try {
       const nfts = await listService.listNfts(chain, nonce, address);
-      return res.json(nfts)
+      return res.json(nfts);
     } catch (e) {
-      return res.status(422).json({ "error": e })
+      return res.status(422).json({ error: e });
     }
-  })
+  });
 
   return router;
 };
