@@ -1,5 +1,3 @@
-import { Wallet } from "ethers";
-import { type } from "os";
 import {
   ElrondHelper,
   ElrondParams,
@@ -13,13 +11,17 @@ import {
 } from "xp.network";
 import { Singleton } from "../singletons";
 
-export interface ApproveService {
-  listNfts: (chain: string, nonce: number, address: string) => Promise<any[]>;
+export interface ListService {
+  listNfts: (
+    chain: string,
+    nonce: number,
+    address: string,
+  ) => Promise<NftInfo<EthNftInfo | EsdtNftInfo>[]>;
 }
 
-export const createListService = (deps: Singleton): ApproveService => {
+export const createListService = (deps: Singleton): ListService => {
   return {
-    async listNfts(chain, nonce, address): Promise<NftInfo<T>[]> {
+    async listNfts(chain, nonce, address) {
       switch (chain.toLowerCase()) {
         case "web3": {
           const fromChain = await deps.chainFactory.inner<

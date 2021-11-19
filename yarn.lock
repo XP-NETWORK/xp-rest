@@ -6786,7 +6786,7 @@ xmlhttprequest@1.8.0:
 
 "xp.network@git+https://github.com/xp-network/xpjs#master-dist":
   version "0.1.0"
-  resolved "git+https://github.com/xp-network/xpjs#bf22918c68028ff84a4ace0ab338f990454ecc16"
+  resolved "git+https://github.com/xp-network/xpjs#c953e2dacf393afa2c9d561d86416e7dc3d0c3da"
   dependencies:
     "@elrondnetwork/erdjs" "^8.0.1-alpha.8"
     axios "^0.21.1"

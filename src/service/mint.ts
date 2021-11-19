@@ -3,14 +3,13 @@ import { Wallet } from "ethers";
 import {
   ElrondHelper,
   ElrondParams,
-  EthNftInfo,
-  NftInfo,
   NftMintArgs,
   TronHelper,
   TronParams,
   Web3Helper,
   Web3Params,
 } from "xp.network";
+import { Chain } from "xp.network/dist/consts";
 import { Singleton } from "../singletons";
 
 export interface MinterService {
@@ -19,35 +18,47 @@ export interface MinterService {
     nonce: number,
     privateKey: string,
     nft: NftMintArgs,
-  ) => Promise<any>;
+  ) => Promise<string>;
 }
 
 export const createMinterService = (deps: Singleton): MinterService => {
   return {
-    async mint(chain, nonce, privateKey, nft): Promise<any> {
+    async mint(chain, nonce, privateKey, nft): Promise<string> {
+      const signer = deps.chainFactory.pkeyToSigner(nonce, privateKey);
       switch (chain.toLowerCase()) {
         case "web3": {
           const chain = await deps.chainFactory.inner<Web3Helper, Web3Params>(
             nonce,
           );
-          const wallet = new Wallet(privateKey);
-          const mint = await deps.chainFactory.mint(chain, wallet, nft);
+
+          const mint = await deps.chainFactory.mint(
+            chain,
+            signer as Wallet,
+            nft,
+          );
           return mint;
         }
         case "elrond": {
           const chain = await deps.chainFactory.inner<
             ElrondHelper,
             ElrondParams
-          >(2);
-          const wallet = UserSigner.fromPem(privateKey);
-          const mint = await deps.chainFactory.mint(chain, wallet, nft);
+          >(Chain.ELROND);
+          const mint = await deps.chainFactory.mint(
+            chain,
+            signer as UserSigner,
+            nft,
+          );
           return mint;
         }
         case "tron": {
           const chain = await deps.chainFactory.inner<TronHelper, TronParams>(
-            9,
+            Chain.TRON,
           );
-          const mint = await deps.chainFactory.mint(chain, privateKey, nft);
+          const mint = await deps.chainFactory.mint(
+            chain,
+            signer as string,
+            nft,
+          );
           return mint;
         }
         default: {

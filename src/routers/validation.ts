@@ -1,8 +1,3 @@
-import {
-  Address,
-  AddressType,
-  ValidatorPublicKey,
-} from "@elrondnetwork/erdjs/out";
 import e, { NextFunction, Request, Response } from "express";
 import { validationResult, body, oneOf } from "express-validator";
 
@@ -69,5 +64,25 @@ export const checkMint = () => {
       body("nft.identifier").exists().isString(),
     ]),
     body("nft.name").exists(),
+  ];
+};
+
+export const checkTransfer = () => {
+  return [
+    body("fromNonce")
+      .isInt()
+      .isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14])
+      .withMessage("please use a valid chain nonce."),
+    body("toNonce")
+      .isInt()
+      .isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14])
+      .withMessage("please use a valid chain nonce."),
+    body("privateKey").exists().isString(),
+    oneOf([
+      body("receiver").isEthereumAddress(),
+      body("receiver").custom((e: string, _m) => e.startsWith("erd")),
+      body("receiver").custom((e: string, _m) => e.startsWith("T")),
+    ]),
+    body("nft").exists().isObject(),
   ];
 };

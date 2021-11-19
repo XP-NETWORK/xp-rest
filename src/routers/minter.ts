@@ -2,17 +2,18 @@ import { Router } from "express";
 
 import { createMinterService } from "../service/mint";
 import { Singleton } from "../singletons";
+import { checkMint, validate } from "./validation";
 
 const mintRouter = async (deps: Singleton) => {
   const router = Router();
-  const minterService = createMinterService(deps);
+  const svc = createMinterService(deps);
 
-  router.post("/mint", async (req, res) => {
+  router.post("/mint", ...checkMint(), validate, async (req, res) => {
     const { chain, nonce, privateKey, nft } = req.body;
 
     try {
-      const response = await minterService.mint(chain, nonce, privateKey, nft);
-      return res.json({ result: response });
+      const response = await svc.mint(chain, nonce, privateKey, nft);
+      return res.json({ txHash: response });
     } catch (e) {
       return res.status(400).json({
         error: e,
