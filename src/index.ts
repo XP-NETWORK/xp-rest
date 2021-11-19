@@ -21,7 +21,7 @@ import { approve, lister, minter, transfer } from "./routers";
 
   app.use("/approve", await approve(deps))
 
-  app.get("/service/heartbeat", async (req, res) => {
+  app.get("/service/heartbeat", async (_req, res) => {
     res.json({
       status: "Up and Running Just Fine.",
     });
