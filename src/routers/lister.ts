@@ -3,7 +3,7 @@ import { Request, Router } from "express";
 import { createListService } from "../service/list";
 import { Singleton } from "../singletons";
 import { ListRequest } from "../types/list";
-import { checkChain, validate } from "./validation";
+import { checkList, validate } from "./validation";
 
 const listerRouter = async (deps: Singleton) => {
   const router = Router();
@@ -12,15 +12,19 @@ const listerRouter = async (deps: Singleton) => {
 
   router.post(
     "/listNfts",
-    ...checkChain(),
+    ...checkList(),
     validate,
     async (req: Request<{}, {}, ListRequest>, res) => {
       const { chain, nonce, address } = req.body;
-
       try {
-        const nfts = await svc.listNfts(chain, nonce, address);
+        const nfts = await svc.listNfts(
+          chain,
+          parseInt(nonce.toString()),
+          address,
+        );
         return res.json(nfts);
       } catch (e) {
+        console.error(e);
         return res.status(422).json({ error: e });
       }
     },

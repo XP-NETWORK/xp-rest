@@ -17,7 +17,12 @@ const mintRouter = async (deps: Singleton) => {
       const { chain, nonce, privateKey, nft } = req.body;
 
       try {
-        const response = await svc.mint(chain, nonce, privateKey, nft);
+        const response = await svc.mint(
+          chain,
+          parseInt(nonce.toString()),
+          privateKey,
+          nft,
+        );
         return res.json({ txHash: response });
       } catch (e) {
         return res.status(400).json({

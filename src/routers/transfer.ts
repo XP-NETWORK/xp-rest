@@ -19,8 +19,8 @@ const transferRouter = async (deps: Singleton) => {
 
       try {
         const txHash = await svc.transfer(
-          fromNonce,
-          toNonce,
+          parseInt(fromNonce.toString()),
+          parseInt(toNonce.toString()),
           privateKey,
           nft,
           receiver,
