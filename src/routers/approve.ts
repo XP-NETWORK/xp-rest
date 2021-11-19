@@ -1,7 +1,8 @@
-import { Router } from "express";
+import { Request, Router } from "express";
 import type { Singleton } from "../singletons";
 import { checkApproveBody, validate } from "./validation";
 import { createApproveService } from "../service/approve";
+import { ApproveRequest } from "../types/approve";
 
 const approveRouter = async (deps: Singleton) => {
   const router = Router();
@@ -11,10 +12,8 @@ const approveRouter = async (deps: Singleton) => {
     "/transfer",
     ...checkApproveBody(),
     validate,
-    async (req, res) => {
-      const { nft, privateKey } = req.body;
-      const nonce = parseInt(req.body.nonce);
-
+    async (req: Request<{}, {}, ApproveRequest>, res) => {
+      const { nft, privateKey, nonce } = req.body;
       try {
         const result = svc.approve(nonce, nft, privateKey);
         return res.json({ result });
