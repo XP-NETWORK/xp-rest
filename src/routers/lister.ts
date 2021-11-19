@@ -1,52 +1,24 @@
 import { Router } from "express";
-import {
-  ElrondHelper,
-  ElrondParams,
-  TronHelper,
-  TronParams,
-  Web3Helper,
-  Web3Params,
-} from "xp.network";
+
+import { createListService } from "../service/list";
 import { Singleton } from "../singletons";
+import { checkChain, validate } from "./validation";
 
 const listerRouter = async (deps: Singleton) => {
   const router = Router();
 
-  router.post("/:chain", async (req, res) => {
-    const fromNonce = parseInt(req.body.nonce);
-    const { chain } = req.params;
-    switch (chain.toLowerCase()) {
-      case "web3": {
-        const fromChain = await deps.chainFactory.inner<Web3Helper, Web3Params>(
-          fromNonce,
-        );
-        const nfts = await deps.chainFactory.nftList(
-          fromChain,
-          req.body.address,
-        );
-        res.json(nfts);
-        break;
-      }
-      case "elrond": {
-        const elrond = await deps.chainFactory.inner<
-          ElrondHelper,
-          ElrondParams
-        >(2);
-        const nfts = await deps.chainFactory.nftList(elrond, req.body.address);
-        res.json(nfts);
-        break;
-      }
-      case "tron": {
-        const tron = await deps.chainFactory.inner<TronHelper, TronParams>(9);
-        const nfts = await deps.chainFactory.nftList(tron, req.body.address);
-        res.json(nfts);
-        break;
-      }
-      default: {
-        res.status(400).json({ chain: "no such chain found" });
-      }
+  const listService = createListService(deps)
+
+  router.post("/listNfts", ...checkChain(), validate, async (req, res) => {
+    const { chain, nonce, address } = req.body;
+
+    try {
+      const nfts = await listService.listNfts(chain, nonce, address);
+      return res.json(nfts)
+    } catch (e) {
+      return res.status(422).json({ "error": e })
     }
-  });
+  })
 
   return router;
 };

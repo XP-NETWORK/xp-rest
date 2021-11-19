@@ -1,5 +1,6 @@
+import { Address, AddressType, ValidatorPublicKey } from "@elrondnetwork/erdjs/out"
 import e, { NextFunction, Request, Response } from "express"
-import { validationResult, body } from "express-validator"
+import { validationResult, body, oneOf } from "express-validator"
 
 export const validate = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req)
@@ -22,5 +23,17 @@ export const checkApproveBody = () => {
     body("nft.native.contract").exists(),
     body("nft.native.owner").exists(),
     body("nft.native.uri").exists(),
+  ]
+}
+
+export const checkChain = () => {
+  return [
+    body("chain").isIn(["web3", "elrond", "tron"]),
+    body("nonce").isInt().isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14]).withMessage("please use a valid chain nonce."),
+    oneOf(
+      [body("address").isEthereumAddress(),
+      body("address").custom((e: string, _m) => e.startsWith("erd")),
+      body("address").custom((e: string, _m) => e.startsWith("T"))
+      ]),
   ]
 }
