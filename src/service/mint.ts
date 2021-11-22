@@ -24,7 +24,7 @@ export interface MinterService {
 export const createMinterService = (deps: Singleton): MinterService => {
   return {
     async mint(chain, nonce, privateKey, nft): Promise<string> {
-      const signer = deps.chainFactory.pkeyToSigner(nonce, privateKey);
+      const signer = await deps.chainFactory.pkeyToSigner(nonce, privateKey);
       switch (chain.toLowerCase()) {
         case "web3": {
           const chain = await deps.chainFactory.inner<Web3Helper, Web3Params>(

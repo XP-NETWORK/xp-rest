@@ -26,15 +26,15 @@ export const createApproveService = (deps: Singleton): ApproveService => {
             TronHelper,
             TronParams
           >(9);
-          return fromChain.approveForMinter(address, privateKey);
+          return await fromChain.approveForMinter(address, privateKey);
         }
-        case 3 || 4 || 5 || 6 || 7 || 8 || 11 || 12 || 14: {
-          const signer = new Wallet(privateKey);
+        case 4: {
           const fromChain = await deps.chainFactory.inner<
             Web3Helper,
             Web3Params
           >(nonce);
-          return fromChain.approveForMinter(address, signer);
+          const signer = fromChain.createWallet(privateKey);
+          return await fromChain.approveForMinter(address, signer);
         }
         default: {
           return Promise.reject(new Error("no such chain found"));

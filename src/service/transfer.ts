@@ -8,7 +8,7 @@ export interface TransferService {
     privateKey: string,
     nft: NftInfo<RawNftF>,
     receiver: string,
-  ) => Promise<string>;
+  ) => Promise<unknown>;
 }
 
 export const createTransferService = (deps: Singleton): TransferService => {
@@ -19,13 +19,16 @@ export const createTransferService = (deps: Singleton): TransferService => {
       privateKey,
       nft,
       receiver,
-    ): Promise<string> {
+    ): Promise<unknown> {
       const { chainFactory } = deps;
       let fromChainNonce = chainFactory.nonceToChainNonce(fromNonce);
       let toChainNonce = chainFactory.nonceToChainNonce(toNonce);
       const fromInner = await chainFactory.inner(fromChainNonce);
       const toInner = await chainFactory.inner(toChainNonce);
-      const signer = chainFactory.pkeyToSigner(fromChainNonce, privateKey);
+      const signer = await chainFactory.pkeyToSigner(
+        fromChainNonce,
+        privateKey,
+      );
 
       const txHash = await chainFactory.transferNft(
         //@ts-ignore
