@@ -3,6 +3,7 @@ import cors from "cors";
 import Config from "./config";
 import { singletons } from "./singletons";
 import { approve, lister, minter, transfer } from "./routers";
+import { ChainFactoryConfigs } from "xp.network";
 
 (async () => {
   const app = express();
@@ -11,15 +12,26 @@ import { approve, lister, minter, transfer } from "./routers";
   app.use(express.json());
   app.use(cors());
 
-  const deps = await singletons();
+  const mainNetDeps = await singletons(ChainFactoryConfigs.MainNet());
+  const testNetDeps = await singletons(ChainFactoryConfigs.TestNet());
 
-  app.use("/minter", await minter(deps));
+  // Mainnet Routes
+  app.use("/minter", await minter(mainNetDeps));
 
-  app.use("/lister", await lister(deps));
+  app.use("/lister", await lister(mainNetDeps));
 
-  app.use("/transfer", await transfer(deps));
+  app.use("/transfer", await transfer(mainNetDeps));
 
-  app.use("/approve", await approve(deps));
+  app.use("/approve", await approve(mainNetDeps));
+
+  // Testnet Routes
+  app.use("testnet/minter", await minter(testNetDeps));
+
+  app.use("testnet/lister", await lister(testNetDeps));
+
+  app.use("testnet/transfer", await transfer(testNetDeps));
+
+  app.use("testnet/approve", await approve(testNetDeps));
 
   app.get("/service/heartbeat", async (_req, res) => {
     res.json({
