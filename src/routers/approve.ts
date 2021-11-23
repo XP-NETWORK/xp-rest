@@ -18,6 +18,7 @@ const approveRouter = async (deps: Singleton) => {
         const result = await svc.approve(nonce, nft, privateKey);
         return res.json({ result });
       } catch (e: any) {
+        console.error(e);
         return res.status(400).json({ error: e });
       }
     },

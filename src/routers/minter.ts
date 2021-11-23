@@ -25,6 +25,7 @@ const mintRouter = async (deps: Singleton) => {
         );
         return res.json({ txHash: response });
       } catch (e) {
+        console.error(e);
         return res.status(400).json({
           error: e,
         });

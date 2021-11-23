@@ -28,7 +28,15 @@ export const createApproveService = (deps: Singleton): ApproveService => {
           >(9);
           return await fromChain.approveForMinter(address, privateKey);
         }
-        case 4: {
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 11:
+        case 12:
+        case 14: {
           const fromChain = await deps.chainFactory.inner<
             Web3Helper,
             Web3Params
