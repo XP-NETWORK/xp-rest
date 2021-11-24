@@ -3,26 +3,34 @@ import { AppConfig, MoralisNetwork } from "xp.network";
 
 config();
 
+export const getOrThrow = (key: string) => {
+  const value = process.env[key];
+  if (!value) {
+    throw new Error(`Missing env var ${key}`);
+  }
+  return value;
+};
+
 export const moralisSecrets = {
-  moralisAppId: process.env.MORALIS_APP_ID!,
-  moralisServer: process.env.MORALIS_SERVER!,
-  moralisSecret: process.env.MORALIS_SECRET!,
+  moralisAppId: getOrThrow("MORALIS_APP_ID"),
+  moralisServer: getOrThrow("MORALIS_SERVER"),
+  moralisSecret: getOrThrow("MORALIS_SECRET"),
   moralisNetwork: "mainnet" as MoralisNetwork,
 };
 
 export const moralisTestNetSecrets = {
-  moralisAppId: process.env.MORALIS_TESTNET_APP_ID!,
-  moralisServer: process.env.MORALIS_TESTNET_SERVER!,
-  moralisSecret: process.env.MORALIS_TESTNET_SECRET!,
+  moralisAppId: getOrThrow("MORALIS_TESTNET_APP_ID"),
+  moralisServer: getOrThrow("MORALIS_TESTNET_SERVER"),
+  moralisSecret: getOrThrow("MORALIS_TESTNET_SECRET"),
   moralisNetwork: "testnet" as MoralisNetwork,
 };
 
 export default {
   port: parseInt(process.env.PORT!),
   appConfig: {
-    exchangeRateUri: process.env.EXCHANGE_RATE_URI!,
-    heartbeatUri: process.env.HEART_BEAT_URI!,
-    tronScanUri: process.env.TRONSCAN_URI!,
+    exchangeRateUri: getOrThrow("EXCHANGE_RATE_URI"),
+    heartbeatUri: getOrThrow("HEART_BEAT_URI"),
+    tronScanUri: getOrThrow("TRON_SCAN_URI"),
   } as AppConfig,
   moralisSecrets,
   moralisTestNetSecrets,
