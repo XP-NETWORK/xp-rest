@@ -25,7 +25,7 @@ const listerRouter = async (deps: Singleton) => {
         return res.json(nfts);
       } catch (e) {
         console.error(e);
-        return res.status(422).json({ error: e });
+        return res.status(422).json({ message: "Something went wrong." });
       }
     },
   );

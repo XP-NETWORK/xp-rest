@@ -19,7 +19,7 @@ const approveRouter = async (deps: Singleton) => {
         return res.json({ result });
       } catch (e: any) {
         console.error(e);
-        return res.status(400).json({ error: e });
+        return res.status(400).json({ message: "Something went wrong." });
       }
     },
   );

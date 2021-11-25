@@ -28,7 +28,7 @@ const transferRouter = async (deps: Singleton) => {
         return res.json({ txHash });
       } catch (e) {
         console.error(e);
-        return res.status(400).json({ error: e });
+        return res.status(400).json({ message: "Something went wrong." });
       }
     },
   );
