@@ -30,6 +30,8 @@
     "ethers": "^5.5.1",
     "express": "^4.17.1",
     "express-validator": "^6.13.0",
+    "express-winston": "^4.2.0",
+    "winston": "^3.3.3",
     "xp.network": "git+https://github.com/xp-network/xpjs#master-dist"
   }
 }
