@@ -3,17 +3,16 @@ import { Request, Router } from "express";
 import { createMinterService } from "../service/mint";
 import { Singleton } from "../singletons";
 import { MintRequest } from "../types/mint";
-import { checkMint, validate } from "./validation";
+import { checkMint } from "./validation";
 
 const mintRouter = async (deps: Singleton) => {
   const router = Router();
   const svc = createMinterService(deps);
-
   router.post(
     "/mint",
     ...checkMint(),
-    validate,
-    async (req: Request<{}, {}, MintRequest>, res) => {
+    // validate,
+    async (req: Request<{}, {}, MintRequest>, res, next) => {
       const { chain, nonce, privateKey, nft } = req.body;
 
       try {
@@ -25,8 +24,8 @@ const mintRouter = async (deps: Singleton) => {
         );
         return res.json({ txHash: response });
       } catch (e) {
-        console.error(e);
-        return res.status(400).json({ message: "Something went wrong." });
+        next(e);
+        return res.status(500).json({ message: "Something went wrong." });
       }
     },
   );

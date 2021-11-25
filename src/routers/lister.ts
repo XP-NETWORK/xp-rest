@@ -14,7 +14,7 @@ const listerRouter = async (deps: Singleton) => {
     "/listNfts",
     ...checkList(),
     validate,
-    async (req: Request<{}, {}, ListRequest>, res) => {
+    async (req: Request<{}, {}, ListRequest>, res, next) => {
       const { chain, nonce, address } = req.body;
       try {
         const nfts = await svc.listNfts(
@@ -24,8 +24,8 @@ const listerRouter = async (deps: Singleton) => {
         );
         return res.json(nfts);
       } catch (e) {
-        console.error(e);
-        return res.status(422).json({ message: "Something went wrong." });
+        next(e);
+        return res.status(500).json({ message: "Something went wrong." });
       }
     },
   );

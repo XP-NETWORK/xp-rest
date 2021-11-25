@@ -12,14 +12,14 @@ const approveRouter = async (deps: Singleton) => {
     "/transfer",
     ...checkApproveBody(),
     validate,
-    async (req: Request<{}, {}, ApproveRequest>, res) => {
+    async (req: Request<{}, {}, ApproveRequest>, res, next) => {
       const { nft, privateKey, nonce } = req.body;
       try {
         const result = await svc.approve(nonce, nft, privateKey);
         return res.json({ result });
       } catch (e: any) {
-        console.error(e);
-        return res.status(400).json({ message: "Something went wrong." });
+        next(e);
+        return res.status(500).json({ message: "Something went wrong." });
       }
     },
   );

@@ -14,7 +14,7 @@ const transferRouter = async (deps: Singleton) => {
     "/transfer",
     ...checkTransfer(),
     validate,
-    async (req: Request<{}, {}, TransferRequest>, res) => {
+    async (req: Request<{}, {}, TransferRequest>, res, next) => {
       const { fromNonce, toNonce, privateKey, nft, receiver } = req.body;
 
       try {
@@ -27,8 +27,8 @@ const transferRouter = async (deps: Singleton) => {
         );
         return res.json({ txHash });
       } catch (e) {
-        console.error(e);
-        return res.status(400).json({ message: "Something went wrong." });
+        next(e);
+        return res.status(500).json({ message: "Something went wrong." });
       }
     },
   );
