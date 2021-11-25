@@ -25,7 +25,7 @@ const transferRouter = async (deps: Singleton) => {
           nft,
           receiver,
         );
-        return res.json({ txHash });
+        return res.json({ hash: txHash });
       } catch (e) {
         next(e);
         return res.status(500).json({ message: "Something went wrong." });

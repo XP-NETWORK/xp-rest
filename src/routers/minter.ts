@@ -22,7 +22,7 @@ const mintRouter = async (deps: Singleton) => {
           privateKey,
           nft,
         );
-        return res.json({ txHash: response });
+        return res.json({ hash: response });
       } catch (e) {
         next(e);
         return res.status(500).json({ message: "Something went wrong." });
