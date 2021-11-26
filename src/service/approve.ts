@@ -4,6 +4,7 @@ import { Wallet } from "ethers";
 import {
   ElrondHelper,
   ElrondParams,
+  EsdtNftInfo,
   EthNftInfo,
   NftInfo,
   TronHelper,
@@ -17,15 +18,16 @@ import { Singleton } from "../singletons";
 export interface ApproveService {
   approve: (
     nonce: number,
-    address: NftInfo<EthNftInfo>,
+    nft: NftInfo<EthNftInfo | EsdtNftInfo>,
     privateKey: string,
-    txFees: string | undefined,
+    txFees: string,
   ) => Promise<string | undefined>;
 }
 
 export const createApproveService = (deps: Singleton): ApproveService => {
   return {
-    async approve(nonce, address, privateKey, txFees) {
+    async approve(nonce, nft, privateKey, txFees) {
+      let fee = new BigNumber(txFees);
       const signer = await deps.chainFactory.pkeyToSigner(nonce, privateKey);
       switch (nonce) {
         case 2: {
@@ -36,9 +38,10 @@ export const createApproveService = (deps: Singleton): ApproveService => {
             ElrondHelper,
             ElrondParams
           >(Chain.ELROND);
-          return await elrond.doEgldSwap(
+          return await elrond.preTransfer(
             signer as UserSigner,
-            new BigNumber(txFees),
+            nft as NftInfo<EsdtNftInfo>,
+            fee,
           );
         }
         case 9: {
@@ -46,7 +49,11 @@ export const createApproveService = (deps: Singleton): ApproveService => {
             TronHelper,
             TronParams
           >(9);
-          return await fromChain.approveForMinter(address, privateKey);
+          return await fromChain.preTransfer(
+            privateKey,
+            nft as NftInfo<EthNftInfo>,
+            fee,
+          );
         }
         case 3:
         case 4:
@@ -62,7 +69,11 @@ export const createApproveService = (deps: Singleton): ApproveService => {
             Web3Params
           >(nonce);
 
-          return await fromChain.approveForMinter(address, signer as Wallet);
+          return await fromChain.preTransfer(
+            signer as Wallet,
+            nft as NftInfo<EthNftInfo>,
+            fee,
+          );
         }
         default: {
           return Promise.reject(new Error("no such chain found"));

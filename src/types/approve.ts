@@ -4,5 +4,5 @@ export interface ApproveRequest {
   nft: NftInfo<EthNftInfo>;
   privateKey: string;
   nonce: number;
-  txFees: string | undefined;
+  txFees: string;
 }

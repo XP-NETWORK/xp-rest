@@ -22,14 +22,8 @@ export const checkApproveBody = () => {
       .withMessage(
         "please provide a private key of the person whose nft you want to approve.",
       ),
-    body("nft.uri").exists(),
-    body("nft.native").exists(),
-    body("nft.native.chainId").exists(),
-    body("nft.native.tokenId").exists(),
-    body("nft.native.contract").exists(),
-    body("nft.native.owner").exists(),
-    body("nft.native.uri").exists(),
-    body("txFees").optional(),
+    body("nft").exists().isObject(),
+    body("txFees").exists(),
   ];
 };
 
