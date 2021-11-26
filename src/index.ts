@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import Config from "./config";
 import { singletons, testnetSingletons } from "./singletons";
-import { approve, lister, minter, transfer } from "./routers";
+import { approve, estimate, lister, minter, transfer } from "./routers";
 import { ChainFactoryConfigs } from "xp.network";
 import winston from "winston";
 import expresswinston from "express-winston";
@@ -55,6 +55,8 @@ import expresswinston from "express-winston";
 
   app.use("/approve", await approve(mainNetDeps));
 
+  app.use("/estimator", await estimate(mainNetDeps));
+
   // Testnet Routes
   app.use("/testnet/minter", await minter(testNetDeps));
 
@@ -63,6 +65,8 @@ import expresswinston from "express-winston";
   app.use("/testnet/transfer", await transfer(testNetDeps));
 
   app.use("/testnet/approve", await approve(testNetDeps));
+
+  app.use("/testnet/estimator", await estimate(mainNetDeps));
 
   app.get("/service/heartbeat", async (_req, res) => {
     res.json({

@@ -102,3 +102,22 @@ export const checkTransfer = () => {
     body("nft").exists().isObject(),
   ];
 };
+
+export const checkEstimate = () => {
+  return [
+    body("fromNonce")
+      .isInt()
+      .isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14])
+      .withMessage("please use a valid chain nonce."),
+    body("toNonce")
+      .isInt()
+      .isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14])
+      .withMessage("please use a valid chain nonce."),
+    oneOf([
+      body("receiver").isEthereumAddress(),
+      body("receiver").custom((e: string, _m) => e?.startsWith("erd") ?? false),
+      body("receiver").custom((e: string, _m) => e?.startsWith("T") ?? false),
+    ]),
+    body("nft").exists().isObject(),
+  ];
+};
