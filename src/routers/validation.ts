@@ -29,6 +29,7 @@ export const checkApproveBody = () => {
     body("nft.native.contract").exists(),
     body("nft.native.owner").exists(),
     body("nft.native.uri").exists(),
+    body("txFees").optional(),
   ];
 };
 

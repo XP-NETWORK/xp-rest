@@ -1,5 +1,9 @@
+import { UserSigner } from "@elrondnetwork/erdjs/out";
+import BigNumber from "bignumber.js";
 import { Wallet } from "ethers";
 import {
+  ElrondHelper,
+  ElrondParams,
   EthNftInfo,
   NftInfo,
   TronHelper,
@@ -7,6 +11,7 @@ import {
   Web3Helper,
   Web3Params,
 } from "xp.network";
+import { Chain } from "xp.network/dist/consts";
 import { Singleton } from "../singletons";
 
 export interface ApproveService {
@@ -14,13 +19,28 @@ export interface ApproveService {
     nonce: number,
     address: NftInfo<EthNftInfo>,
     privateKey: string,
+    txFees: string | undefined,
   ) => Promise<string | undefined>;
 }
 
 export const createApproveService = (deps: Singleton): ApproveService => {
   return {
-    async approve(nonce, address, privateKey) {
+    async approve(nonce, address, privateKey, txFees) {
+      const signer = await deps.chainFactory.pkeyToSigner(nonce, privateKey);
       switch (nonce) {
+        case 2: {
+          if (!txFees) {
+            throw new Error("txFees is required for approval in elrond.");
+          }
+          const elrond = await deps.chainFactory.inner<
+            ElrondHelper,
+            ElrondParams
+          >(Chain.ELROND);
+          return await elrond.doEgldSwap(
+            signer as UserSigner,
+            new BigNumber(txFees),
+          );
+        }
         case 9: {
           const fromChain = await deps.chainFactory.inner<
             TronHelper,
@@ -41,8 +61,8 @@ export const createApproveService = (deps: Singleton): ApproveService => {
             Web3Helper,
             Web3Params
           >(nonce);
-          const signer = fromChain.createWallet(privateKey);
-          return await fromChain.approveForMinter(address, signer);
+
+          return await fromChain.approveForMinter(address, signer as Wallet);
         }
         default: {
           return Promise.reject(new Error("no such chain found"));
