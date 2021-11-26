@@ -14,12 +14,12 @@ export interface ApproveService {
     nonce: number,
     address: NftInfo<EthNftInfo>,
     privateKey: string,
-  ) => Promise<boolean>;
+  ) => Promise<string | undefined>;
 }
 
 export const createApproveService = (deps: Singleton): ApproveService => {
   return {
-    async approve(nonce, address, privateKey): Promise<boolean> {
+    async approve(nonce, address, privateKey) {
       switch (nonce) {
         case 9: {
           const fromChain = await deps.chainFactory.inner<
