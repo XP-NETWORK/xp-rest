@@ -88,7 +88,7 @@ export const checkTransfer = () => {
       .isInt()
       .isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14])
       .withMessage("please use a valid chain nonce."),
-    body("privateKey").exists().isString(),
+
     oneOf([
       body("receiver").isEthereumAddress(),
       body("receiver").custom((e: string, _m) => e?.startsWith("erd") ?? false),

@@ -6,7 +6,7 @@ export interface TransferService {
   transfer: <RawNftF>(
     fromNonce: number,
     toNonce: number,
-    privateKey: string,
+
     nft: NftInfo<EthNftInfo>,
     receiver: string,
   ) => Promise<PopulatedTransaction>;
@@ -17,7 +17,7 @@ export const createTransferService = (deps: Singleton): TransferService => {
     async transfer(
       fromNonce,
       toNonce,
-      privateKey,
+
       nft,
       receiver,
     ): Promise<PopulatedTransaction> {
@@ -28,10 +28,6 @@ export const createTransferService = (deps: Singleton): TransferService => {
         fromChainNonce,
       );
       const toInner = await chainFactory.inner(toChainNonce);
-      const signer = await chainFactory.pkeyToSigner(
-        fromChainNonce,
-        privateKey,
-      );
 
       const fee = await chainFactory.estimateFees(
         fromInner,

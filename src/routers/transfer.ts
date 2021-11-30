@@ -16,7 +16,7 @@ const transferRouter = async (deps: Singleton) => {
     ...checkTransfer(),
     validate,
     async (req: Request<{}, {}, TransferRequest>, res, next) => {
-      const { fromNonce, toNonce, privateKey, nft, receiver, chain } = req.body;
+      const { fromNonce, toNonce, nft, receiver, chain } = req.body;
 
       if (chain !== "web3") {
         return next(new Error("Only web3 chain is supported right now"));
@@ -25,7 +25,7 @@ const transferRouter = async (deps: Singleton) => {
         const tx = await svc.transfer(
           parseInt(fromNonce.toString()),
           parseInt(toNonce.toString()),
-          privateKey,
+
           nft as NftInfo<EthNftInfo>,
           receiver,
         );
