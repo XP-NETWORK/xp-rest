@@ -89,13 +89,13 @@ Body :-
 ````javascript
 interface TransferRequest {
   fromNonce: number; // Nonce of the Origin Chain
+  chain: string; // web3 only for now.
   toNonce: number; // Nonce of the Destination Chain
-  privateKey: string; // PrivateKey of the Owner of the NFT
   receiver: string; // Address of the Receiver
   // To get this, we need to get the NFT info from the Origin Chain using the ```/lister/listNfts``` endpoint.
   nft: {
     uri: string, // URI of the NFT
-    native: EthNftInfo | EsdtNftInfo, // Check the source code for these types.
+    native: EthNftInfo, // Check the source code for these types.
   };
 }
 ````
