@@ -6,4 +6,5 @@ export interface TransferRequest {
   privateKey: string;
   receiver: string;
   nft: NftInfo<EthNftInfo | EsdtNftInfo>;
+  chain: string;
 }

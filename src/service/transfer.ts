@@ -1,4 +1,5 @@
-import { NftInfo } from "xp.network";
+import { PopulatedTransaction } from "ethers";
+import { EthNftInfo, NftInfo, Web3Helper, Web3Params } from "xp.network";
 import { Singleton } from "../singletons";
 
 export interface TransferService {
@@ -6,9 +7,9 @@ export interface TransferService {
     fromNonce: number,
     toNonce: number,
     privateKey: string,
-    nft: NftInfo<RawNftF>,
+    nft: NftInfo<EthNftInfo>,
     receiver: string,
-  ) => Promise<unknown>;
+  ) => Promise<PopulatedTransaction>;
 }
 
 export const createTransferService = (deps: Singleton): TransferService => {
@@ -19,26 +20,40 @@ export const createTransferService = (deps: Singleton): TransferService => {
       privateKey,
       nft,
       receiver,
-    ): Promise<unknown> {
+    ): Promise<PopulatedTransaction> {
       const { chainFactory } = deps;
       let fromChainNonce = chainFactory.nonceToChainNonce(fromNonce);
       let toChainNonce = chainFactory.nonceToChainNonce(toNonce);
-      const fromInner = await chainFactory.inner(fromChainNonce);
+      const fromInner = await chainFactory.inner<Web3Helper, Web3Params>(
+        fromChainNonce,
+      );
       const toInner = await chainFactory.inner(toChainNonce);
       const signer = await chainFactory.pkeyToSigner(
         fromChainNonce,
         privateKey,
       );
 
-      const txHash = await chainFactory.transferNft(
-        //@ts-ignore
+      const fee = await chainFactory.estimateFees(
         fromInner,
+        //@ts-ignore
         toInner,
         nft,
-        signer,
         receiver,
       );
-      return txHash;
+      //@ts-ignore
+      if (fromInner.isWrappedNft(nft)) {
+        const res = await fromInner.unfreezeWrappedNftTxn(receiver, nft, fee);
+        return res;
+      } else {
+        const res = await fromInner.transferNftToForeignTxn(
+          //@ts-ignore
+          toInner.getNonce(),
+          receiver,
+          nft,
+          fee,
+        );
+        return res;
+      }
     },
   };
 };

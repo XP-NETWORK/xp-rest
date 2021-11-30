@@ -1,4 +1,5 @@
 import { Request, Router } from "express";
+import { EthNftInfo, NftInfo } from "xp.network";
 import { createTransferService } from "../service/transfer";
 
 import { Singleton } from "../singletons";
@@ -15,17 +16,20 @@ const transferRouter = async (deps: Singleton) => {
     ...checkTransfer(),
     validate,
     async (req: Request<{}, {}, TransferRequest>, res, next) => {
-      const { fromNonce, toNonce, privateKey, nft, receiver } = req.body;
+      const { fromNonce, toNonce, privateKey, nft, receiver, chain } = req.body;
 
+      if (chain !== "web3") {
+        return next(new Error("Only web3 chain is supported right now"));
+      }
       try {
-        const txHash = await svc.transfer(
+        const tx = await svc.transfer(
           parseInt(fromNonce.toString()),
           parseInt(toNonce.toString()),
           privateKey,
-          nft,
+          nft as NftInfo<EthNftInfo>,
           receiver,
         );
-        return res.json({ hash: txHash });
+        return res.json(tx);
       } catch (e) {
         next(e);
         return res.status(500).json({ message: "Something went wrong." });
