@@ -1,15 +1,21 @@
 import { PopulatedTransaction } from "ethers";
-import { EthNftInfo, NftInfo, Web3Helper, Web3Params } from "xp.network";
+import {
+  ElrondRawUnsignedTxn,
+  EthNftInfo,
+  NftInfo,
+  Web3Helper,
+  Web3Params,
+} from "xp.network";
 import { Singleton } from "../singletons";
 
 export interface TransferService {
   transfer: <RawNftF>(
     fromNonce: number,
     toNonce: number,
-
+    sender: string,
     nft: NftInfo<EthNftInfo>,
     receiver: string,
-  ) => Promise<PopulatedTransaction>;
+  ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn>;
 }
 
 export const createTransferService = (deps: Singleton): TransferService => {
@@ -17,39 +23,33 @@ export const createTransferService = (deps: Singleton): TransferService => {
     async transfer(
       fromNonce,
       toNonce,
-
+      sender,
       nft,
       receiver,
-    ): Promise<PopulatedTransaction> {
+    ): Promise<PopulatedTransaction | ElrondRawUnsignedTxn> {
       const { chainFactory } = deps;
       let fromChainNonce = chainFactory.nonceToChainNonce(fromNonce);
       let toChainNonce = chainFactory.nonceToChainNonce(toNonce);
-      const fromInner = await chainFactory.inner<Web3Helper, Web3Params>(
-        fromChainNonce,
-      );
+      const fromInner = await chainFactory.inner(fromChainNonce);
       const toInner = await chainFactory.inner(toChainNonce);
 
       const fee = await chainFactory.estimateFees(
-        fromInner,
         //@ts-ignore
+        fromInner,
         toInner,
         nft,
         receiver,
       );
-      //@ts-ignore
-      if (fromInner.isWrappedNft(nft)) {
-        const res = await fromInner.unfreezeWrappedNftTxn(receiver, nft, fee);
-        return res;
-      } else {
-        const res = await fromInner.transferNftToForeignTxn(
-          //@ts-ignore
-          toInner.getNonce(),
-          receiver,
-          nft,
-          fee,
-        );
-        return res;
-      }
+      const txn = await chainFactory.generateNftTxn(
+        //@ts-ignore
+        fromInner,
+        toChainNonce,
+        sender,
+        receiver,
+        nft,
+        fee,
+      );
+      return txn;
     },
   };
 };

@@ -92,6 +92,7 @@ interface TransferRequest {
   chain: string; // web3 only for now.
   toNonce: number; // Nonce of the Destination Chain
   receiver: string; // Address of the Receiver
+  sender: string; // Sender of the NFT
   // To get this, we need to get the NFT info from the Origin Chain using the ```/lister/listNfts``` endpoint.
   nft: {
     uri: string, // URI of the NFT
@@ -99,3 +100,20 @@ interface TransferRequest {
   };
 }
 ````
+
+## Troubleshooting
+
+- In case you're using the library in a console application and getting errors, go to:
+- node_modules/xpnet-nft-list/dist/nft-list/model/moralis/MoralisNftListService.js
+
+Now your line #7 looks like this (to be used in the FE):
+
+```javascript
+7   const moralis_1 = __importDefault(require("moralis"));
+```
+
+Change it like so (for BE usage):
+
+```javascript
+7   const moralis_1 = __importDefault(require("moralis/node"));
+```

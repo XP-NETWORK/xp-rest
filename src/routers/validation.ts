@@ -88,7 +88,10 @@ export const checkTransfer = () => {
       .isInt()
       .isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14])
       .withMessage("please use a valid chain nonce."),
-    body("chain").exists(),
+    body("chain", "only supports web3 or elrond right now")
+      .exists()
+      .isIn(["web3", "elrond"]),
+    body("sender", "address of the receiver is a required field").exists(),
     oneOf([
       body("receiver").isEthereumAddress(),
       body("receiver").custom((e: string, _m) => e?.startsWith("erd") ?? false),
