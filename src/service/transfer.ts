@@ -16,7 +16,7 @@ export interface TransferService {
     sender: string,
     nft: NftInfo<RawNftF>,
     receiver: string,
-  ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn>;
+  ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn | string>;
 }
 
 export const createTransferService = (deps: Singleton): TransferService => {
@@ -27,7 +27,7 @@ export const createTransferService = (deps: Singleton): TransferService => {
       sender,
       nft,
       receiver,
-    ): Promise<PopulatedTransaction | ElrondRawUnsignedTxn> {
+    ): Promise<PopulatedTransaction | ElrondRawUnsignedTxn | string> {
       const { chainFactory } = deps;
       let fromChainNonce = chainFactory.nonceToChainNonce(fromNonce);
       let toChainNonce = chainFactory.nonceToChainNonce(toNonce);

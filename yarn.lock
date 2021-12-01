@@ -7033,7 +7033,7 @@ xmlhttprequest@1.8.0:
 
 "xp.network@git+https://github.com/xp-network/xpjs#master-dist":
   version "0.1.0"
-  resolved "git+https://github.com/xp-network/xpjs#1e8f0b54262033052e10dc69c97dca2d9eceb4ef"
+  resolved "git+https://github.com/xp-network/xpjs#03e61f8ffcb173d41bd8fae71011acddbd65dbe1"
   dependencies:
     "@elrondnetwork/erdjs" "^8.0.1-alpha.8"
     algosdk "^1.12.0"

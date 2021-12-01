@@ -16,7 +16,7 @@ const transferRouter = async (deps: Singleton) => {
     ...checkTransfer(),
     validate,
     async (req: Request<{}, {}, TransferRequest>, res, next) => {
-      const { fromNonce, toNonce, nft, receiver, chain, sender } = req.body;
+      const { fromNonce, toNonce, nft, receiver, sender } = req.body;
 
       try {
         const tx = await svc.transfer(

@@ -15,15 +15,17 @@ export interface ApproveService {
     nft: NftInfo<EthNftInfo | EsdtNftInfo>,
     sender: string,
     txFees: string,
-  ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn | undefined>;
+  ) => Promise<
+    PopulatedTransaction | ElrondRawUnsignedTxn | string | undefined
+  >;
 }
 
 export const createApproveService = (deps: Singleton): ApproveService => {
   return {
     async approve(nonce, nft, sender, txFees) {
       let fee = new BigNumber(txFees);
-      let chain = deps.chainFactory.inner(nonce);
-      let txn = deps.chainFactory.generatePreTransferTxn(
+      let chain = await deps.chainFactory.inner(nonce);
+      let txn = await deps.chainFactory.generatePreTransferTxn(
         //@ts-ignore
         chain,
         sender,
