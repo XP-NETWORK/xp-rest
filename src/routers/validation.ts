@@ -15,7 +15,7 @@ export const checkApproveBody = () => {
   return [
     body("nonce")
       .isInt()
-      .isIn([2, 3, 4, 5, 6, 7, 8, 11, 12, 14])
+      .isIn([2, 3, 4, 5, 6, 7, 8, 11, 12, 14, 9])
       .withMessage("please use a valid chain nonce."),
     body("address", "address of the sender").exists().isEthereumAddress(),
     body("nft").exists().isObject(),
@@ -86,7 +86,7 @@ export const checkTransfer = () => {
       .withMessage("please use a valid chain nonce."),
     body("chain", "only supports web3 or elrond right now")
       .exists()
-      .isIn(["web3", "elrond"]),
+      .isIn(["web3", "elrond", "tron"]),
     body("sender", "address of the receiver is a required field").exists(),
     oneOf([
       body("receiver").isEthereumAddress(),
