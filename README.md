@@ -71,7 +71,7 @@ interface ApproveRequest {
         contract: string;
     };
   };
-  privateKey: string;
+  address: string;
   nonce: number;
 }
 
@@ -96,7 +96,7 @@ interface TransferRequest {
   // To get this, we need to get the NFT info from the Origin Chain using the ```/lister/listNfts``` endpoint.
   nft: {
     uri: string, // URI of the NFT
-    native: EthNftInfo, // Check the source code for these types.
+    native: EthNftInfo | EsdtNftInfo, // Check the source code for these types.
   };
 }
 ````

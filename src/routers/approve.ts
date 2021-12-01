@@ -13,9 +13,9 @@ const approveRouter = async (deps: Singleton) => {
     ...checkApproveBody(),
     validate,
     async (req: Request<{}, {}, ApproveRequest>, res, next) => {
-      const { nft, privateKey, nonce, txFees } = req.body;
+      const { nft, sender, nonce, txFees } = req.body;
       try {
-        const result = await svc.approve(nonce, nft, privateKey, txFees);
+        const result = await svc.approve(nonce, nft, sender, txFees);
         return res.json({ result });
       } catch (e: any) {
         next(e);

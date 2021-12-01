@@ -15,13 +15,9 @@ export const checkApproveBody = () => {
   return [
     body("nonce")
       .isInt()
-      .isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14])
+      .isIn([2, 3, 4, 5, 6, 7, 8, 11, 12, 14])
       .withMessage("please use a valid chain nonce."),
-    body("privateKey")
-      .exists()
-      .withMessage(
-        "please provide a private key of the person whose nft you want to approve.",
-      ),
+    body("address", "address of the sender").exists().isEthereumAddress(),
     body("nft").exists().isObject(),
     body("txFees").exists(),
   ];

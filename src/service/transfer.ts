@@ -1,6 +1,7 @@
 import { PopulatedTransaction } from "ethers";
 import {
   ElrondRawUnsignedTxn,
+  EsdtNftInfo,
   EthNftInfo,
   NftInfo,
   Web3Helper,
@@ -13,7 +14,7 @@ export interface TransferService {
     fromNonce: number,
     toNonce: number,
     sender: string,
-    nft: NftInfo<EthNftInfo>,
+    nft: NftInfo<RawNftF>,
     receiver: string,
   ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn>;
 }
