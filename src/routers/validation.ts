@@ -46,23 +46,16 @@ export const checkList = () => {
 
 export const checkMint = () => {
   return [
-    body("chain").isIn(["web3", "elrond", "tron"]),
     body("nonce")
       .isInt()
       .isIn([2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14])
       .withMessage("please use a valid chain nonce."),
-    body("privateKey")
-      .isString()
-      .withMessage(
-        "please provide a private key of the person to whom you want to mint the nft to",
-      ),
+    body("sender").isString(),
     oneOf([
       body(
         "nft.contract",
         "if your chain is web3, please pass the contract address",
-      )
-        .exists()
-        .isEthereumAddress(),
+      ).exists(),
       body(
         "nft.identifier",
         "if your chain is elrond, please pass the ESDT identifier.",

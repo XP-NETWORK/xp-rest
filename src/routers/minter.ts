@@ -13,16 +13,15 @@ const mintRouter = async (deps: Singleton) => {
     ...checkMint(),
     // validate,
     async (req: Request<{}, {}, MintRequest>, res, next) => {
-      const { chain, nonce, privateKey, nft } = req.body;
+      const { nonce, sender, nft } = req.body;
 
       try {
         const response = await svc.mint(
-          chain,
           parseInt(nonce.toString()),
-          privateKey,
+          sender,
           nft,
         );
-        return res.json({ hash: response });
+        return res.json({ txn: response });
       } catch (e) {
         next(e);
         return res.status(500).json({ message: "Something went wrong." });
