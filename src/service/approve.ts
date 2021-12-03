@@ -5,6 +5,7 @@ import {
   EsdtNftInfo,
   EthNftInfo,
   NftInfo,
+  TronRawTxn,
 } from "xp.network";
 
 import { Singleton } from "../singletons";
@@ -16,7 +17,7 @@ export interface ApproveService {
     sender: string,
     txFees: string,
   ) => Promise<
-    PopulatedTransaction | ElrondRawUnsignedTxn | string | undefined
+    PopulatedTransaction | ElrondRawUnsignedTxn | TronRawTxn | undefined
   >;
 }
 

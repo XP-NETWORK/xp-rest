@@ -1,5 +1,5 @@
 import { PopulatedTransaction } from "ethers";
-import { ElrondRawUnsignedTxn, NftMintArgs } from "xp.network";
+import { ElrondRawUnsignedTxn, NftMintArgs, TronRawTxn } from "xp.network";
 import { Singleton } from "../singletons";
 
 export interface MinterService {
@@ -7,7 +7,7 @@ export interface MinterService {
     nonce: number,
     privateKey: string,
     args: NftMintArgs,
-  ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn | string>;
+  ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn | TronRawTxn>;
 }
 
 export const createMinterService = (deps: Singleton): MinterService => {

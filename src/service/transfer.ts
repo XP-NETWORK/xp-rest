@@ -4,6 +4,7 @@ import {
   EsdtNftInfo,
   EthNftInfo,
   NftInfo,
+  TronRawTxn,
   Web3Helper,
   Web3Params,
 } from "xp.network";
@@ -16,7 +17,7 @@ export interface TransferService {
     sender: string,
     nft: NftInfo<RawNftF>,
     receiver: string,
-  ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn | string>;
+  ) => Promise<PopulatedTransaction | ElrondRawUnsignedTxn | TronRawTxn>;
 }
 
 export const createTransferService = (deps: Singleton): TransferService => {
@@ -27,7 +28,7 @@ export const createTransferService = (deps: Singleton): TransferService => {
       sender,
       nft,
       receiver,
-    ): Promise<PopulatedTransaction | ElrondRawUnsignedTxn | string> {
+    ): Promise<PopulatedTransaction | ElrondRawUnsignedTxn | TronRawTxn> {
       const { chainFactory } = deps;
       let fromChainNonce = chainFactory.nonceToChainNonce(fromNonce);
       let toChainNonce = chainFactory.nonceToChainNonce(toNonce);
