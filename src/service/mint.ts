@@ -14,7 +14,7 @@ export const createMinterService = (deps: Singleton): MinterService => {
   return {
     async mint(nonce, sender, args) {
       const { chainFactory } = deps;
-      const chain = chainFactory.inner(nonce);
+      const chain = await chainFactory.inner(nonce);
       return chainFactory.generateMintTxn(
         //@ts-ignore
         chain,
